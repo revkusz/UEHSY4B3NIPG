@@ -1,0 +1,66 @@
+program Game;
+
+uses crt,SDL2,SDL2_Image;
+
+var i : byte;
+running:boolean;
+sdlwindow1:PSDL_Window;
+sdlRenderer:PSDL_Renderer;
+event:PSDL_Event;
+
+procedure init(); //Initialization
+
+begin
+     if SDL_Init( SDL_INIT_VIDEO ) < 0 then HALT;
+
+  sdlWindow1 := SDL_CreateWindow( 'Window1', 100,100, 800, 250, SDL_WINDOW_SHOWN );
+  if sdlWindow1 = nil then HALT;
+
+  sdlRenderer := SDL_CreateRenderer( sdlWindow1, -1, 0 );
+  if sdlRenderer = nil then HALT;
+end;
+
+procedure onEvent(event:PSDL_Event); //event handling
+
+begin
+	Case event^.type_ of 
+		SDL_KEYDOWN: begin
+			if event^.key.keysym.sym=27 then running:=false;
+		end;
+	end;
+end;
+
+procedure loop(); //main loop
+
+begin
+	if keypressed then running:=false;
+	//delay(2000);
+end;
+
+procedure render(); //rendering process
+
+begin
+
+end;
+
+procedure cleanup(); //cleanup process
+
+begin
+	SDL_Quit();
+end;
+
+BEGIN
+	running:=true;
+	init();
+	while (running) do begin
+		if SDL_POLLEVENT(event)=1 then begin
+			onEvent(event);
+		end;
+		loop();
+		render();
+	end;
+	cleanup;
+	
+	
+END.
+
