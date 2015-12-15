@@ -1,6 +1,6 @@
 program Game;
 
-uses crt,SDL2,SDL2_Image,MMSystem,forisek,petrik;
+uses crt,SDL2,SDL2_Image,MMSystem,forisek,petrik,norbi;
 
 const mlgmode = true ; 
 
@@ -16,7 +16,7 @@ fal,tuske,player
 
 
 //VAR
-palya:map; i,j : byte; running:boolean;
+palya:map; i,j,frame : byte; running:boolean; sajt:PUInt8;
 
 
 
@@ -49,11 +49,21 @@ end;
 procedure onEvent(event:PSDL_Event); //event handling
 
 begin
-	Case event^.type_ of 
+	{Case event^.type_ of 
 		SDL_KEYDOWN: begin
-			if event^.key.keysym.sym=27 then running:=false;
+			if event^.key.keysym.sym=SDLK_ESCAPE then running:=false;
+			if event^.key.keysym.sym=SDLK_a  then palya:=balra;
+			if event^.key.keysym.sym=SDLK_d  then palya:=jobra;
+			if event^.key.keysym.sym=SDLK_w  then palya:=jumpol;
 		end;
-	end;
+	end;}
+	sajt := SDL_GetKeyboardState(nil);
+	//writeln(sajt[SDL_SCANCODE_W]);
+	if sajt[SDL_SCANCODE_W]=1 then palya:=jumpol;
+	if sajt[SDL_SCANCODE_A]=1 then palya:=balra;
+	if sajt[SDL_SCANCODE_D]=1 then palya:=jobra;
+	if sajt[SDL_SCANCODE_ESCAPE] =1 then running:=false;
+	
 end;
 
 procedure loop(); //main loop
@@ -67,6 +77,7 @@ procedure render(); //rendering process
 begin
 		SDL_SetRenderDrawColor(sdlRenderer,0,0,0,0);
 		SDL_RenderClear(sdlRenderer);
+		if frame=60 then frame:=1;
 		begin
 			for i:=0 to 23 do begin
 				for j:=0 to 79 do begin
@@ -80,7 +91,16 @@ begin
 					
 				end;
 			end;
+			if frame mod 2 = 0 then begin
+				if isfall then begin 
+					palya:=esik(palya);
+				end;
+				if isjump then begin
+					palya:=ugrik(palya);
+				end;
+			end;
 		end;
+		inc(frame);
 		SDL_RenderPresent(sdlRenderer);
 end;
 
@@ -112,9 +132,10 @@ end;
 BEGIN
 textcolor(white);
 	cursoroff;
-	menu();
+	//menu();
 	running:=true;
 	init();
+	mapinit(palya);
 	while (running) do begin
 		if SDL_POLLEVENT(event)=1 then begin
 			onEvent(event);
