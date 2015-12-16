@@ -59,10 +59,11 @@ begin
 	end;}
 	sajt := SDL_GetKeyboardState(nil);
 	//writeln(sajt[SDL_SCANCODE_W]);
-	if sajt[SDL_SCANCODE_W]=1 then palya:=jumpol;
-	if sajt[SDL_SCANCODE_A]=1 then palya:=balra;
-	if sajt[SDL_SCANCODE_D]=1 then palya:=jobra;
+	if sajt[SDL_SCANCODE_W]=1 then {if frame mod 2 = 0 then} begin palya:=jumpol; end;	 
+	if sajt[SDL_SCANCODE_A]=1 then {if frame mod 2 = 0 then} begin palya:=balra; end;
+	if sajt[SDL_SCANCODE_D]=1 then {if frame mod 2 = 0 then} begin palya:=jobra; end;
 	if sajt[SDL_SCANCODE_ESCAPE] =1 then running:=false;
+	
 	
 end;
 
@@ -91,7 +92,7 @@ begin
 					
 				end;
 			end;
-			if frame mod 2 = 0 then begin
+			if frame mod 7 = 0 then begin
 				if isfall then begin 
 					palya:=esik(palya);
 				end;
@@ -140,6 +141,7 @@ textcolor(white);
 		if SDL_POLLEVENT(event)=1 then begin
 			onEvent(event);
 		end;
+		//delay(100);
 		loop();
 		render();
 	end;

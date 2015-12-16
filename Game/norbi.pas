@@ -43,7 +43,7 @@ begin
 								If palya[player.x+1,player.y] = 4 then Writeln('Tuskebe estel!');		//writeparancs sdl-be						
 								If palya[player.x+1,player.y] = 0 Then	// Ha jobbra lép és alatta nem lesz platform
 									Begin
-										esike:=true;
+										if not ugrike then esike:=true;
 									End;
 								End;
 		jobra:=palya;
@@ -60,7 +60,7 @@ begin
 								If palya[player.x+1,player.y] = 4 then Writeln('Tuskebe estel!');		//writeparancs sdl-be						
 								If palya[player.x+1,player.y] = 0 Then	// Ha jobbra lép és alatta nem lesz platform
 									Begin
-										esike:=true;
+										if not ugrike then esike:=true;
 									End;
 								End;
 		balra:=palya
@@ -70,11 +70,14 @@ function esik(mapp:map) :map;
 
 begin
 	palya:=mapp;
-	palya[player.x,player.y] := 0;
-	inc(player.x);
-	palya[player.x,player.y] := 9;
-	if palya[player.x+1,player.y] = 3 then esike:=false;
-	if palya[player.x+1,player.y] = 4 then begin writeln('megmurdeltel'); esike:=false; end;	
+	if palya[player.x+1,player.y] <> 3 then begin
+	
+		palya[player.x,player.y] := 0;
+		inc(player.x);
+		palya[player.x,player.y] := 9;
+		if palya[player.x+1,player.y] = 3 then esike:=false;
+		if palya[player.x+1,player.y] = 4 then begin writeln('megmurdeltel'); esike:=false; end;	
+	end else esike:=false;
 	esik:=palya;
 end;
 
@@ -82,13 +85,15 @@ function ugrik(mapp:map) : map;
 
 begin
 	palya:=mapp;
-	inc(jump);
-	palya[player.x,player.y] := 0;
-	dec(player.x);
-	palya[player.x,player.y] := 9;
-	if jump=5 then begin ugrike:=false; esike:=true; end;
-	if palya[player.x-1,player.y] = 3 then begin ugrike:=false; esike:=true; end;
-	if palya[player.x-1,player.y] = 4 then begin writeln('megmurdeltel'); ugrike:=false; end;
+	if palya[player.x-1,player.y] <> 3 then begin
+		inc(jump);
+		palya[player.x,player.y] := 0;
+		dec(player.x);
+		palya[player.x,player.y] := 9;
+		if jump>=5 then begin ugrike:=false; esike:=true; jump:=0; end;
+		if palya[player.x-1,player.y] = 3 then begin ugrike:=false; esike:=true; end;
+		if palya[player.x-1,player.y] = 4 then begin writeln('megmurdeltel'); ugrike:=false; esike:=true; end;
+	end else begin ugrike:=false; esike:=true; end; 
 	ugrik:=palya;
 
 end;
