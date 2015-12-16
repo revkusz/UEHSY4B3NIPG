@@ -9,6 +9,7 @@ var player:jatekos;
 	palya:map;
 	esike:boolean;
 	ugrike:boolean;
+	died:boolean;
 	jump:byte;
 
 procedure mapinit(mapp:map);
@@ -20,6 +21,7 @@ function ugrik(mapp:map) :map;
 function isfall:boolean;
 function isjump:boolean;
 procedure resetjump;
+function isdead :boolean;
 
 implementation
 
@@ -40,7 +42,7 @@ begin
 								palya[player.x,player.y] := 0;
 								inc(player.y);
 								palya[player.x,player.y] := 9;
-								If palya[player.x+1,player.y] = 4 then Writeln('Tuskebe estel!');		//writeparancs sdl-be						
+								If palya[player.x+1,player.y] = 4 then begin {Writeln('Tuskebe estel!');} if not ugrike then esike:=true; end;		//writeparancs sdl-be						
 								If palya[player.x+1,player.y] = 0 Then	// Ha jobbra lép és alatta nem lesz platform
 									Begin
 										if not ugrike then esike:=true;
@@ -57,7 +59,7 @@ begin
 								palya[player.x,player.y] := 0;
 								dec(player.y);
 								palya[player.x,player.y] := 9;
-								If palya[player.x+1,player.y] = 4 then Writeln('Tuskebe estel!');		//writeparancs sdl-be						
+								If palya[player.x+1,player.y] = 4 then begin {Writeln('Tuskebe estel!');} if not ugrike then esike:=true; end;		//writeparancs sdl-be						
 								If palya[player.x+1,player.y] = 0 Then	// Ha jobbra lép és alatta nem lesz platform
 									Begin
 										if not ugrike then esike:=true;
@@ -71,12 +73,11 @@ function esik(mapp:map) :map;
 begin
 	palya:=mapp;
 	if palya[player.x+1,player.y] <> 3 then begin
-	
+		if palya[player.x+1,player.y] = 3 then esike:=false;
+		if palya[player.x+1,player.y] = 4 then begin died:=true; end;
 		palya[player.x,player.y] := 0;
 		inc(player.x);
 		palya[player.x,player.y] := 9;
-		if palya[player.x+1,player.y] = 3 then esike:=false;
-		if palya[player.x+1,player.y] = 4 then begin writeln('megmurdeltel'); esike:=false; end;	
 	end else esike:=false;
 	esik:=palya;
 end;
@@ -92,7 +93,7 @@ begin
 		palya[player.x,player.y] := 9;
 		if jump>=5 then begin ugrike:=false; esike:=true; jump:=0; end;
 		if palya[player.x-1,player.y] = 3 then begin ugrike:=false; esike:=true; end;
-		if palya[player.x-1,player.y] = 4 then begin writeln('megmurdeltel'); ugrike:=false; esike:=true; end;
+		if palya[player.x-1,player.y] = 4 then begin ugrike:=false; esike:=true; end;
 	end else begin ugrike:=false; esike:=true; end; 
 	ugrik:=palya;
 
@@ -117,11 +118,18 @@ begin
 	jump:=0;
 end;
 
+function isdead :boolean;
+
+begin
+	isdead:=died;
+end;
+
 procedure mapinit(mapp:map); 
 var i,j:byte;
 begin
 	palya:=mapp;
 	esike:=false;
+	died:=false;
 	for i:=1 to 24 do begin
 		for j:=1 to 80 do begin
 			if palya[i,j]=9 then begin 

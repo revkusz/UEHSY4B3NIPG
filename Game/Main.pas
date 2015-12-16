@@ -10,7 +10,7 @@ var
 sdlwindow1:PSDL_Window; sdlRenderer:PSDL_Renderer; event:PSDL_Event; textsurf:PSDL_Surface; pos:PSDL_rect;
 
 //VAR SDL_TEXTURE
-fal,tuske,player
+fal,tuske,player,halal
 
 :PSDL_Texture;
 
@@ -31,12 +31,17 @@ begin
 	sdlRenderer := SDL_CreateRenderer( sdlWindow1, -1, SDL_RENDERER_PRESENTVSYNC );
 	if sdlRenderer = nil then HALT;
 	{texture init begin}
+	textsurf:=IMG_Load('res\textures\icon.tga');
+	SDL_SetWindowIcon(sdlWindow1,textsurf);
 	textsurf:=IMG_Load('res\textures\fal.tga');
 	fal:=SDL_CreateTextureFromSurface(sdlRenderer,textsurf);
 	textsurf:=IMG_Load('res\textures\spike.tga');
 	tuske:=SDL_CreateTextureFromSurface(sdlRenderer,textsurf);
 	textsurf:=IMG_Load('res\textures\player.tga');
 	player:=SDL_CreateTextureFromSurface(sdlRenderer,textsurf);
+	textsurf:=IMG_Load('res\textures\death.tga');
+	halal:=SDL_CreateTextureFromSurface(sdlRenderer,textsurf);
+	
 	
 	{texture init end}
 	palya:=loadMap('res\maps\map001.txt');
@@ -59,9 +64,12 @@ begin
 	end;}
 	sajt := SDL_GetKeyboardState(nil);
 	//writeln(sajt[SDL_SCANCODE_W]);
-	if sajt[SDL_SCANCODE_W]=1 then {if frame mod 2 = 0 then} begin palya:=jumpol; end;	 
-	if sajt[SDL_SCANCODE_A]=1 then {if frame mod 2 = 0 then} begin palya:=balra; end;
-	if sajt[SDL_SCANCODE_D]=1 then {if frame mod 2 = 0 then} begin palya:=jobra; end;
+	if not isdead then begin
+	if sajt[SDL_SCANCODE_W]=1 then if frame mod 1 = 0 then begin palya:=jumpol; end;	 
+	if sajt[SDL_SCANCODE_A]=1 then if frame mod 2 = 0 then begin palya:=balra; end;
+	if sajt[SDL_SCANCODE_D]=1 then if frame mod 2 = 0 then begin palya:=jobra; end;
+	end;
+	if sajt[SDL_SCANCODE_R]=1 then begin palya:=loadMap('res\maps\map001.txt'); mapinit(palya); end;
 	if sajt[SDL_SCANCODE_ESCAPE] =1 then running:=false;
 	
 	
@@ -85,7 +93,8 @@ begin
 					pos^.x:=j*15;
 					pos^.y:=i*15;
 					if palya[i+1,j+1]=9 then begin 
-					SDL_RenderCopy(sdlRenderer,player,nil,pos);
+					if not isdead then SDL_RenderCopy(sdlRenderer,player,nil,pos) else
+						SDL_RenderCopy(sdlRenderer,halal,nil,pos)
 					end;
 					if palya[i+1,j+1]=3 then SDL_RenderCopy(sdlRenderer,fal,nil,pos);
 					if palya[i+1,j+1]=4 then SDL_RenderCopy(sdlRenderer,tuske,nil,pos);
