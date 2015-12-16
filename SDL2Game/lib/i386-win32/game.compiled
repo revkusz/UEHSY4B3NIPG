@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="C:\lazarus\fpc\2.6.4\bin\i386-win32\fpc.exe" Date="1195613038"/>
-  <Params Value=" -MObjFPC -Scghi -O1 -g -gl -l -vewnhibq -FuC:\Users\ricsi\Desktop\SDL2Game\ -FUC:\Users\ricsi\Desktop\SDL2Game\lib\i386-win32\ game.pas"/>
-</CONFIG>
