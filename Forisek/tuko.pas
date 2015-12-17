@@ -4,7 +4,7 @@ program tuko;
      s:string;
      i,j:integer;
  begin
- assign(f,'szovegs.txt');
+ assign(f,'palya.txt');
  {$I-}
  reset(f);
  {$I+}
