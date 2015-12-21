@@ -11,6 +11,7 @@ var player:jatekos;
 	ugrike:boolean;
 	died:boolean;
 	jump:byte;
+	cash:integer;
 
 procedure mapinit(mapp:map);
 function jobra :map;
@@ -22,10 +23,17 @@ function isfall:boolean;
 function isjump:boolean;
 procedure resetjump;
 function isdead :boolean;
+function getcash :integer;
 
 implementation
 
 uses crt;
+
+function getcash :integer;
+
+begin
+	getcash:=cash;
+end;
 
 function jumpol : map ;
 
@@ -38,7 +46,8 @@ function jobra : map;
  
 begin
 	If palya[player.x,player.y+1] <> 3 Then 
-							Begin					
+							Begin
+								if palya[player.x,player.y+1] = 5 then inc(cash);
 								palya[player.x,player.y] := 0;
 								inc(player.y);
 								palya[player.x,player.y] := 9;
@@ -55,7 +64,8 @@ function balra :map;
 
 begin
 	If palya[player.x,player.y-1] <> 3 Then 
-							Begin					
+							Begin	
+								if palya[player.x,player.y-1] = 5 then inc(cash);
 								palya[player.x,player.y] := 0;
 								dec(player.y);
 								palya[player.x,player.y] := 9;
@@ -73,6 +83,7 @@ function esik(mapp:map) :map;
 begin
 	palya:=mapp;
 	if palya[player.x+1,player.y] <> 3 then begin
+		if palya[player.x+1,player.y] = 5 then inc(cash);
 		if palya[player.x+1,player.y] = 3 then esike:=false;
 		if palya[player.x+1,player.y] = 4 then begin died:=true; end;
 		palya[player.x,player.y] := 0;
@@ -87,13 +98,14 @@ function ugrik(mapp:map) : map;
 begin
 	palya:=mapp;
 	if palya[player.x-1,player.y] <> 3 then begin
+	if palya[player.x-1,player.y] = 5 then inc(cash);
 		inc(jump);
 		palya[player.x,player.y] := 0;
 		dec(player.x);
 		palya[player.x,player.y] := 9;
 		if jump>=5 then begin ugrike:=false; esike:=true; jump:=0; end;
-		if palya[player.x-1,player.y] = 3 then begin ugrike:=false; esike:=true; end;
-		if palya[player.x-1,player.y] = 4 then begin ugrike:=false; esike:=true; end;
+		if palya[player.x-1,player.y] = 3 then begin ugrike:=false; esike:=true; jump:=0 end;
+		if palya[player.x-1,player.y] = 4 then begin ugrike:=false; esike:=true; jump:=0 end;
 	end else begin ugrike:=false; esike:=true; end; 
 	ugrik:=palya;
 
@@ -127,6 +139,7 @@ end;
 procedure mapinit(mapp:map); 
 var i,j:byte;
 begin
+	cash:=0;
 	palya:=mapp;
 	esike:=false;
 	died:=false;

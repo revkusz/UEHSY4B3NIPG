@@ -36,6 +36,9 @@ begin
 				'4':asd[j,i]:=4;
 				' ':asd[j,i]:=0;
 				'9':asd[j,i]:=9;
+				'5':asd[j,i]:=5;
+				'7':asd[j,i]:=7;
+				'8':asd[j,i]:=8;
 			end;
 		end;
 		inc(j);
